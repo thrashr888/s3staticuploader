@@ -5,8 +5,11 @@ A HTML5, S3-hosted app for uploading files to S3 using CORS.
 ## Usage
 
 1) (Create a new S3 bucket)[https://console.aws.amazon.com/s3/home] in the `US Standard` region.
+
 1a) Click the `Properties` button, then `Add more permissions`, and add `View Permissions` to `Everyone` and `Save`.
+
 1b) In the `Website` tab, tick the `Enabled` checkbox and set the `Index Document` to `index.html`. Click the `Save` button. The `Endpoint` url is what you will use to view your uploader site, you'll want to open that url in a new tab or window.
+
 1c) Back in the `Permissions` tab, click on `Edit CORS Configuration` and place this config in the text area, replacing `<bucket-name>` with the name of your bucket:
 
     <?xml version="1.0" encoding="UTF-8"?>
