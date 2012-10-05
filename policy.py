@@ -13,7 +13,7 @@ policy_document = """{"expiration": "2020-01-01T00:00:00Z",
     ["starts-with", "$key", "%s"],
     {"acl": "public-read"},
     ["starts-with", "$Content-Type", ""],
-    ["content-length-range", 0, 1048576]
+    ["content-length-range", 0, 26214400]
   ]
 }""" % (bucket, key)
 

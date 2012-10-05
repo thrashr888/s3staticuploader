@@ -27,7 +27,8 @@
         }
     };
     var makeLink = function(url) {
-        return "<a href=" + url + " target='_blank'>" + url + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
+        url = url.replace(/\s/g, "%20");
+        return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + url + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
     };
     
     var links = linkStorage.read();
@@ -54,7 +55,7 @@
             fd = new FormData(),
             exp = moment().add('days', 1).unix(),
             $file = document.getElementById('file').files[0] || files[0];
-        var key = "u/" + moment().unix() + '-' + $file.name;
+        var key = "u/" + moment().unix() + '-' + $file.name.replace(/\s/g, "%20");
         var file_url = 'http://' + domain + '/' + key;
 
         // Populate the Post paramters.
