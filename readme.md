@@ -46,7 +46,7 @@ You're done setting up S3.
         policy = "<policy>",
         signature = "<signature>";
 
-4) Upload `index.html` and the `css`, `img`, and `js` folders to the new S3 bucket you created. You can now view the site and upload files.
+4) Upload `index.html` and the `css`, `flash`, `img`, and `js` folders to the new S3 bucket you created. You can now view the site and upload files.
 
 ## Currently hardcoded settings
 

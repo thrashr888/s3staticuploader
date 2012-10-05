@@ -27,8 +27,8 @@
         }
     };
     var makeLink = function(url) {
-        return "<a href=" + url + " target='_blank'>" + url + "</a>" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
-    }
+        return "<a href=" + url + " target='_blank'>" + url + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
+    };
     
     var links = linkStorage.read();
     var links_out = "";
