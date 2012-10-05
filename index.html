@@ -13,9 +13,19 @@
                 padding-top: 60px;
                 padding-bottom: 40px;
             }
+            
+            div#dropbox {
+                padding: 1em;
+                font-size: 1.5em;
+                border-radius: 0.5em;
+                border: 2px solid;
+                background-color: #DDD;
+            }
+            
+            div#dropbox:hover { background-color: #BBB; }
+            #filename a:first-of-type { background-color: #e1f57b; }
         </style>
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
-        <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.1.min.js"></script>
     </head>
@@ -47,13 +57,13 @@
 
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="hero-unit">
-                <h1>Upload!</h1>
+                <h1>Upload and Share!</h1>
+                
                 <div class="row">
                     <form action="#" id="uploader" class="form-inline" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="key" value="" />
                         <input type="hidden" name="AWSAccessKeyId" value="" />
                         <input type="hidden" name="acl" value="" />
-                        <input type="hidden" name="success_action_redirect" value="" />
                         <input type="hidden" name="policy" value="" />
                         <input type="hidden" name="signature" value="" />
                         <input type="hidden" name="Content-Type" value="" />
@@ -61,11 +71,13 @@
                         <div class="span3">
                             <h2>File</h2>
                             <p><input type="file" name="file" placeholder="Choose a file…" id="file" /></p>
+                            <div id="dropbox">Or Drop Here</div>
                         </div>
+                        
                         <div class="span3">
                             <h2>Expires</h2>
                             <p>
-                                <select name="expires">
+                                <select name="expires" class="span3">
                                     <option value="1">1 day</option>
                                     <option value="2">2 days</option>
                                     <option value="3">3 days</option>
@@ -76,15 +88,27 @@
                                 </select>
                             </p>
                        </div>
+                       
                         <div class="span3">
                             <h2>Upload <span id="progressNumber"></span></h2>
                             <p><input type="submit" value="Upload" class="btn btn-primary btn-large" /></p>
                         </div>
                     </form>
                 </div>
+                
+                <div class="row" style="margin-top: 1em;">
+                    <div class="span9">
+                        <div class="progress progress-striped active" style="display: none;">
+                            <div class="bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="row">
                    <div class="span12">
+                       <h2>File history</h2>
                        <p id="filename"></p>
+                       <p><a href="#" data-action="clear" class="btn">clear</a></p>
                    </div>
                 </div>
             </div>
@@ -104,7 +128,6 @@
 
         <script>
             var bucket = "<bucket>",
-                success_action_redirect = "<success_action_redirect>",
                 AWSAccessKeyId = "<AWSAccessKeyId>",
                 policy = "<policy>",
                 signature = "<signature>";

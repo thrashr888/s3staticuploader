@@ -2,7 +2,11 @@
 
 A HTML5, S3-hosted app for uploading files to S3 using CORS.
 
-## Usage
+## Warning
+
+This app allows anyone with access to the url to upload files to your S3 bucket. Standard S3 charges will apply. This is _non-free_.
+
+## Installation
 
 1) (Create a new S3 bucket)[https://console.aws.amazon.com/s3/home] in the `US Standard` region.
 
@@ -58,7 +62,6 @@ Uploading should work fine. Post an issue on GitHub or send a pull request and I
 ## TODO
 
 * Get expiration working
-* Keep history of uploads in localStorage
 * Write setup script that updates the html files and pushes to S3
 
 ## MIT License
