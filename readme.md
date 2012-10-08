@@ -4,7 +4,7 @@ A HTML5, S3-hosted app for uploading files to S3 using [CORS](http://docs.amazon
 
 ## Warning
 
-This app allows anyone with access to the url to upload files to your S3 bucket. Standard S3 charges will apply. This is **non-free**.
+This app allows anyone with access to the url to upload files to your S3 bucket. [Standard S3 charges](http://aws.amazon.com/s3/pricing/) will apply. This is **non-free**.
 
 ## Installation
 
@@ -17,11 +17,11 @@ This app allows anyone with access to the url to upload files to your S3 bucket.
 
     $ ./policy.py BUCKET_NAME AWS_ACCESS_KEY AWS_SECRET_KEY [KEY] [MAX_MEGABYTES]
 
-2) Use the deploy script to create and set up your new site and upload it to S3. *NOTE: this script will only copy the files included in this repo needed for the site.*
+2) Use the deploy script to create and set up your new site and upload it to S3. *NOTE: This script will only copy the files included in this repo needed for the site, and overwrite existing files with the same name.*
 
 \* Requires Python installed with [pip](http://www.pip-installer.org/en/latest/installing.html).
 
-    $ curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python # if pip is not installed
+    $ [ -x `which pip` ] || curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python # install pip if unavailable
     $ pip install boto # installs the `boto` package for accessing Amazon Web Services
     $ ./deploy.py BUCKET_NAME AWS_ACCESS_KEY AWS_SECRET_KEY
 
