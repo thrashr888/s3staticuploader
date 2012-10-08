@@ -1,63 +1,33 @@
 # ![s3staticuploader logo](http://s3upper.s3.amazonaws.com/u/1349501039-s3staticuploader-logo.gif "s3staticuploader logo")
 
-A HTML5, S3-hosted app for uploading files to S3 using CORS.
+A HTML5, S3-hosted app for uploading files to S3 using [CORS](http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html).
 
 ## Warning
 
-This app allows anyone with access to the url to upload files to your S3 bucket. Standard S3 charges will apply. This is _non-free_.
+This app allows anyone with access to the url to upload files to your S3 bucket. Standard S3 charges will apply. This is **non-free**.
 
 ## Installation
 
-1) [Create a new S3 bucket.](https://console.aws.amazon.com/s3/home) Bucket names should be url-friendly (lowercase, no spaces).
+0) Clone this repo to your computer.
 
-1a) Click the `Properties` button, then `Add more permissions`, and add `View Permissions` to `Grantee: Everyone` and `Save`.
+    $ git clone git://github.com/thrashr888/s3staticuploader.git
+    $ cd s3staticuploader
 
-1b) In the `Website` tab, tick the `Enabled` checkbox and set the `Index Document` to `index.html`. Click the `Save` button. The `Endpoint` url is what you will use to view your uploader site, you'll want to open that url in a new tab or window for later.
+1) Use the policy generator `policy.py` in this repo to generate the strings you will place in `index.html`. `<key>` is the folder name you want to use, ex. `u/`. The script will create and update the file `js/settings.js` for you.
 
-1c) Back in the `Permissions` tab, click on `Add CORS Configuration` and place this config in the text area, replacing `<bucket-name>` with the name of your bucket:
+    $ ./policy.py BUCKET_NAME AWS_ACCESS_KEY AWS_SECRET_KEY [KEY] [MAX_MEGABYTES]
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-        <CORSRule>
-            <AllowedOrigin>
-                http://<bucket-name>.s3-website-us-east-1.amazonaws.com
-            </AllowedOrigin>
-            <AllowedMethod>PUT</AllowedMethod>
-            <AllowedMethod>POST</AllowedMethod>
-            <AllowedMethod>DELETE</AllowedMethod>
-            <AllowedHeader>*</AllowedHeader>
-        </CORSRule>
-        <CORSRule>
-            <AllowedOrigin>*</AllowedOrigin>
-            <AllowedMethod>GET</AllowedMethod>
-        </CORSRule>
-    </CORSConfiguration>
+2) Use the deploy script to create and set up your new site and upload it to S3. *NOTE: this script will only copy the files included in this repo needed for the site.*
 
-You're done setting up S3.
+\* Requires Python installed with [pip](http://www.pip-installer.org/en/latest/installing.html).
 
-2) Use the policy generator `policy.py` in this repo to generate the strings you will place in `index.html`. `<key>` is the folder name you want to use, ex. `u/`.
-
-    python policy.py <bucket-name> <aws_secret_key> <key>
-
-3) Update the strings in `/js/settings.js`:
-
-    window.bucket = "<bucket>";
-    window.AWSAccessKeyId = "<AWSAccessKeyId>";
-    window.policy = "<policy>";
-    window.signature = "<signature>";
-
-4) Upload `index.html` and the `css`, `flash`, `img`, and `js` folders to the new S3 bucket you created. Make sure that the files you've uploaded are world-readable. You can now view the site and upload files at the `Endpoint` url from step __1b__.
-
-## Currently hardcoded settings
-
-I still need to clean this up.
-
-* `"u/"` as the key prefix or folder name.
-* File size limit set to 25mb.
+    $ curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python # if pip is not installed
+    $ pip install boto # installs the `boto` package for accessing Amazon Web Services
+    $ ./deploy.py BUCKET_NAME AWS_ACCESS_KEY AWS_SECRET_KEY
 
 ## Issues & debugging S3 CORS uploads
 
-Uploading should work fine. Post an issue on GitHub or send a pull request and I can add the fix. If you have trouble debugging S3 uploading, you can un-comment the `return;` in `main.js` to let the form POST as usual. The `s3.amazonaws.com` site can be helpful with debugging.
+Uploading should work fine. Post an issue on GitHub or send a Pull Pequest and I can add the fix or otherwise try to help. If you have trouble debugging S3 uploading, you can un-comment the `return;` in `main.js` to let the form POST as usual. The `s3.amazonaws.com` url can be helpful with debugging when POSTing to it.
 
 More info:
 
@@ -65,13 +35,13 @@ More info:
 
 ## TODO & Contributing
 
-List moved to [GitHub Issues](https://github.com/thrashr888/s3staticuploader/issues). Please don't hesitate to submit an Issue or Pull Request.
+TODO list in [GitHub Issues](https://github.com/thrashr888/s3staticuploader/issues). Please don't hesitate to submit an Issue or Pull Request.
 
 ## Special Thanks
 
-Idea thanks to the defunct [senduit.com](http://senduit.com). Made possible by Amazon's S3 service. Uses code from Twitter Bootstrap and HTML5 Boilerplate, naturally.
+Idea thanks to the defunct [senduit.com](http://senduit.com). Made possible by Amazon's S3 service. Uses code from Twitter Bootstrap and HTML5 Boilerplate, naturally. Also inspired by the idea of *Software-with-a-Service*, as mentioned in the [Skypipe CLI tool](https://github.com/progrium/skypipe), "we can now build software leveraging features of software as a service that is packaged and distributed like normal open source software."
 
-## License
+## MIT License
 
 Copyright (C) 2012 Paul Thrasher
 
