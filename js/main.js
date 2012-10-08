@@ -1,5 +1,13 @@
-(function($, window){
+(function($, window, s3u){
 
+    // localize our settings
+    var bucket = s3u.bucket,
+        AWSAccessKeyId = s3u.AWSAccessKeyId,
+        policy = s3u.policy,
+        signature = s3u.signature,
+        key = s3u.key;
+
+    // cache selectors
     var self = this,
         $form = $('#uploader'),
         $clear = $('a[data-action="clear"]'),
@@ -11,26 +19,29 @@
         acl = "public-read",
         clippy = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="110" height="14" id="clippy" ><param name="movie" value="/flash/clippy.swf"/><param name="allowScriptAccess" value="always" /><param name="quality" value="high" /><param name="scale" value="noscale" /><param NAME="FlashVars" value="text=#{text}"><param name="bgcolor" value="#EEEEEE"><embed src="/flash/clippy.swf" width="110" height="14" name="clippy" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" FlashVars="text=#{text}" bgcolor="#EEEEEE" /></object>';
 
+    // wrapper api for storage
     var linkStorage = {
         add: function(url) {
             var urls = this.read();
             urls.unshift(url);
             localStorage['s3uploader'] = JSON.stringify(urls);
         },
-        
         read: function() {
             return JSON.parse(localStorage['s3uploader'] || "[]") || [];
         },
-        
         reset: function() {
             localStorage['s3uploader'] = [];
         }
     };
+
+    // build our html links
     var makeLink = function(url) {
+        // be careful about spaces in urls
         url = url.replace(/\s/g, "%20");
         return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + url + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
     };
     
+    // display saved links
     var links = linkStorage.read();
     var links_out = "";
     for(var i = 0; i < links.length; i++) {
@@ -38,6 +49,7 @@
     }
     $('#filename').html(links_out);
     
+    // clear out link list
     $clear.click(function(e){
         linkStorage.reset();
         $('#filename').html("");
@@ -45,6 +57,7 @@
         $(this).blur();
     });
     
+    // uploder form submission
     $form.submit(function(e){
 
         //console.log(e);
@@ -81,6 +94,7 @@
         //console.log('fd', fd);
         //console.log('$file', $file);
 
+        // the progress bar
         xhr.upload.addEventListener("progress", function(evt){
             if (evt.lengthComputable) {
                 var percentComplete = Math.round(evt.loaded * 100 / evt.total);
@@ -93,8 +107,9 @@
             }
         }, false);
         
-        
+        // set up event handlers for ajax request
         xhr.addEventListener("load", function(e) {
+            // success
             //console.log('done', e);
             linkStorage.add(file_url);
             $('#filename').prepend(makeLink(file_url));
@@ -103,6 +118,7 @@
             $progress.hide().find(".bar").css({width: 0});
         }, false);
         xhr.addEventListener("error", function(e) {
+            // sometimes S3 throws errors (303) but still works, so we create the link anyway
             //console.log('failed', e);
             linkStorage.add(file_url);
             $('#filename').prepend(makeLink(file_url));
@@ -124,6 +140,7 @@
         e.preventDefault();
     });
     
+    // enable drag and drop
     $dropbox.addEventListener("dragenter", function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -150,4 +167,4 @@
         $form.submit();
     }, false);
 
-})(jQuery, window);
+})(jQuery, window, window.s3u);
