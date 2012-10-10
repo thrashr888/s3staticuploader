@@ -1,10 +1,14 @@
-# ![s3staticuploader logo](http://s3upper.s3.amazonaws.com/u/1349501039-s3staticuploader-logo.gif "s3staticuploader logo")
+# ![s3staticuploader logo](http://thrashr888-tests3upper.s3.amazonaws.com/u/d7/1349862973/s3staticuploader-logo.gif "s3staticuploader logo")
 
 A HTML5, S3-hosted app for uploading files to S3 using [CORS](http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html).
 
 ## Warning
 
 This app allows anyone with access to the url to upload files to your S3 bucket. [Standard S3 charges](http://aws.amazon.com/s3/pricing/) will apply. This is **non-free**.
+
+## Screenshot
+
+![s3staticuploader screenshot](http://thrashr888-tests3upper.s3.amazonaws.com/u/d7/1349862986/S3%2520Static%2520Uploader%252010:10:12%25202:52%2520AM.png "s3staticuploader screenshot")
 
 ## Installation
 

@@ -41,11 +41,11 @@
     // build our html links
     var makeLink = function(url, name, size, expires) {
         // be careful about spaces in urls
-        url = url.replace(/\s/g, "%20");
+        url = url.replace(/\s/g, "%20").replace(/%/g, "%25");
         // var date = Math.round((new Date()).getTime() / 1000) - (expires * 86400);
         // TODO add real expiration date here, up to minute?
 
-        return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + name + ' (' + size + ' KB) &ndash; expires in ' + (expires == 1 ? expires + ' day' : expires + ' days') + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
+        return "<a href=" + url + " target='_blank'>" + name + ' (' + size + ' KB) &ndash; expires in ' + (expires == 1 ? expires + ' day' : expires + ' days') + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
     };
     
     // display saved links
