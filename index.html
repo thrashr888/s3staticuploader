@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>S3 Static Uploader</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -16,6 +16,7 @@
             
             div#dropbox {
                 padding: 1em;
+                margin: 1em 0;
                 font-size: 1.5em;
                 border-radius: 0.5em;
                 border: 2px solid;
@@ -43,10 +44,10 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="#">S3 Static Uploader</a>
+                    <a class="brand" href="/">S3 Static Uploader</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
-                            <li class="active"><a href="http://paulthrasher.com/">PaulThrasher.com</a></li>
+                            <li><a href="http://paulthrasher.com/">PaulThrasher.com</a></li>
                             <li><a href="https://github.com/thrashr888/s3staticuploader">This project on GitHub</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
@@ -58,8 +59,6 @@
 
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="hero-unit">
-                <h1>Upload and Share!</h1>
-                
                 <div class="row">
                     <form action="#" id="uploader" class="form-inline" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="key" value="" />
@@ -69,14 +68,8 @@
                         <input type="hidden" name="signature" value="" />
                         <input type="hidden" name="Content-Type" value="" />
                         
-                        <div class="span3">
-                            <h2>File</h2>
-                            <p><input type="file" name="file" placeholder="Choose a file…" id="file" /></p>
-                            <div id="dropbox">Or Drop Here</div>
-                        </div>
-                        
-                        <div class="span3">
-                            <h2>Expires</h2>
+                        <div class="span3 offset3">
+                            <h2>Expires in</h2>
                             <p>
                                 <select name="expires" class="span3">
                                     <option value="1">1 day</option>
@@ -88,30 +81,28 @@
                                     <option value="7">1 week</option>
                                 </select>
                             </p>
-                       </div>
-                       
-                        <div class="span3">
-                            <h2>Upload <span id="progressNumber"></span></h2>
+
+                            <h2>File</h2>
+                            <p><input type="file" name="file" placeholder="Choose a file…" id="file" /></p>
+
+                            <div id="dropbox">Or Drop Here</div>
+
+                            <div class="progress progress-striped active" style="display: none;">
+                                <div class="bar" style="width: 0%;"></div>
+                            </div>
+
                             <p><input type="submit" value="Upload" class="btn btn-primary btn-large" /></p>
                         </div>
                     </form>
                 </div>
+            </div>
                 
-                <div class="row" style="margin-top: 1em;">
-                    <div class="span9">
-                        <div class="progress progress-striped active" style="display: none;">
-                            <div class="bar" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                   <div class="span12">
-                       <h2>File history</h2>
-                       <p id="filename"></p>
-                       <p><a href="#" data-action="clear" class="btn">clear history</a></p>
-                   </div>
-                </div>
+            <div class="row">
+               <div class="span12">
+                   <h2>File history</h2>
+                   <p id="filename"></p>
+                   <p><a href="#" data-action="clear" class="btn">clear history</a></p>
+               </div>
             </div>
 
             <hr>

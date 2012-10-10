@@ -11,13 +11,12 @@
     var self = this,
         $form = $('#uploader'),
         $clear = $('a[data-action="clear"]'),
-        $dropbox = document.getElementById("dropbox"),
+        $dropbox = document.getElementById("dropbox"), // uses native JS api for dragdrop
         $progress = $(".progress"),
-        $progressNumber = $('#progressNumber'),
         files = null,
         domain = bucket + '.s3.amazonaws.com',
         acl = "public-read",
-        clippy = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="110" height="14" id="clippy" ><param name="movie" value="/flash/clippy.swf"/><param name="allowScriptAccess" value="always" /><param name="quality" value="high" /><param name="scale" value="noscale" /><param NAME="FlashVars" value="text=#{text}"><param name="bgcolor" value="#EEEEEE"><embed src="/flash/clippy.swf" width="110" height="14" name="clippy" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" FlashVars="text=#{text}" bgcolor="#EEEEEE" /></object>';
+        clippy = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="110" height="14" id="clippy" ><param name="movie" value="/flash/clippy.swf"/><param name="allowScriptAccess" value="always" /><param name="quality" value="high" /><param name="scale" value="noscale" /><param NAME="FlashVars" value="text=#{text}"><param name="bgcolor" value="#FFFFFF"><embed src="/flash/clippy.swf" width="110" height="14" name="clippy" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" FlashVars="text=#{text}" bgcolor="#FFFFFF" /></object>';
 
     // wrapper api for storage
     var linkStorage = {
@@ -38,7 +37,8 @@
     var makeLink = function(url) {
         // be careful about spaces in urls
         url = url.replace(/\s/g, "%20");
-        return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + url + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
+        var url_name = url.replace('http://' + domain, '');
+        return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + url_name + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
     };
     
     // display saved links
@@ -60,35 +60,36 @@
     // uploder form submission
     $form.submit(function(e){
 
-        //console.log(e);
-        var ev = e.originalEvent;
-        var expiration = moment().add('days', 1).format('YYYY-MM-DD\\THH:mm:ss\\Z');
-
-        var xhr = new XMLHttpRequest(),
+        // console.log(e);
+        var ev = e.originalEvent,
+            xhr = new XMLHttpRequest(),
             fd = new FormData(),
-            exp = moment().add('days', 1).unix(),
             $file = document.getElementById('file').files[0] || files[0];
-        var key = "u/" + moment().unix() + '-' + $file.name.replace(/\s/g, "%20");
+        var exp = $('select[name="expires"]').val() || 1;
+        var key = "u/d" + exp + '/' + Math.round((new Date()).getTime() / 1000) + '/' + $file.name.replace(/\s/g, "%20");
         var file_url = 'http://' + domain + '/' + key;
-
+        
         // Populate the Post paramters.
-        fd.append('key', key);
         fd.append('AWSAccessKeyId', AWSAccessKeyId);
         fd.append('acl', acl);
         fd.append('policy', policy);
         fd.append('signature',signature);
+        fd.append('key', key);
         fd.append('Content-Type', $file.type);
         fd.append('file', $file);
-        
+
         // update the form. if there's any js errors, it will just POST as normal.
         $form.attr('action', 'https://' + domain);
-        $form.find('input[name="key"]').val(key);
         $form.find('input[name="AWSAccessKeyId"]').val(AWSAccessKeyId);
         $form.find('input[name="acl"]').val(acl);
         $form.find('input[name="policy"]').val(policy);
         $form.find('input[name="signature"]').val(signature);
+        $form.find('input[name="key"]').val(key);
         $form.find('input[name="Content-Type"]').val($file.type);
-        
+
+        // var form_data = $("#uploader").serializeArray();
+        // console.log(form_data);
+
         // return; // Return here to let the form POST as normal. Helps with debugging.
         
         //console.log('fd', fd);
@@ -99,11 +100,7 @@
             if (evt.lengthComputable) {
                 var percentComplete = Math.round(evt.loaded * 100 / evt.total);
                 //console.log(percentComplete.toString());
-                $progressNumber.html(percentComplete.toString() + '%');
                 $progress.show().find(".bar").css({width: percentComplete.toString() + '%'});
-            }
-            else {
-                $progressNumber.html('unable to compute');
             }
         }, false);
         
@@ -113,7 +110,6 @@
             //console.log('done', e);
             linkStorage.add(file_url);
             $('#filename').prepend(makeLink(file_url));
-            $progressNumber.html("");
             $($dropbox).html("Or drop here.");
             $progress.hide().find(".bar").css({width: 0});
         }, false);
@@ -122,13 +118,11 @@
             //console.log('failed', e);
             linkStorage.add(file_url);
             $('#filename').prepend(makeLink(file_url));
-            $progressNumber.html("");
             $($dropbox).html("Or drop here.");
             $progress.hide().find(".bar").css({width: 0});
         }, false);
         xhr.addEventListener("abort", function(e) {
             //console.log('cancelled', e);
-            $progressNumber.html('cancelled');
             $($dropbox).html("Or drop here.");
             $progress.hide().find(".bar").css({width: 0});
         }, false);
@@ -162,7 +156,8 @@
         
         //console.log('dropped', files);
         
-        $($dropbox).html("Dropped " + files[0].name);
+        var file_size = Math.round(files[0].size * 10 / 1024) / 10;
+        $($dropbox).html("Dropped " + files[0].name + ' ' + file_size + ' KB');
         
         $form.submit();
     }, false);
