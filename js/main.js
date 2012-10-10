@@ -20,9 +20,14 @@
 
     // wrapper api for storage
     var linkStorage = {
-        add: function(url) {
+        add: function(url, name, size, expires) {
             var urls = this.read();
-            urls.unshift(url);
+
+            var date = Math.round((new Date()).getTime() / 1000);
+            var new_url = { url: url, name: name, size: size, expires: expires, date: date };
+            urls.unshift(new_url);
+            // console.log(new_url);
+
             localStorage['s3uploader'] = JSON.stringify(urls);
         },
         read: function() {
@@ -34,18 +39,20 @@
     };
 
     // build our html links
-    var makeLink = function(url) {
+    var makeLink = function(url, name, size, expires) {
         // be careful about spaces in urls
         url = url.replace(/\s/g, "%20");
-        var url_name = url.replace('http://' + domain, '');
-        return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + url_name + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
+        // var date = Math.round((new Date()).getTime() / 1000) - (expires * 86400);
+        // TODO add real expiration date here, up to minute?
+
+        return "<a href=" + url.replace(/%/g, "%25") + " target='_blank'>" + name + ' (' + size + ' KB) &ndash; expires in ' + (expires == 1 ? expires + ' day' : expires + ' days') + "</a>&nbsp;" + clippy.replace(/\#\{text\}/gi, url) + "<br />";
     };
     
     // display saved links
     var links = linkStorage.read();
     var links_out = "";
     for(var i = 0; i < links.length; i++) {
-        links_out += makeLink(links[i]);
+        links_out += makeLink(links[i].url, links[i].name, links[i].size, links[i].expires);
     }
     $('#filename').html(links_out);
     
@@ -68,6 +75,8 @@
         var exp = $('select[name="expires"]').val() || 1;
         var key = "u/d" + exp + '/' + Math.round((new Date()).getTime() / 1000) + '/' + $file.name.replace(/\s/g, "%20");
         var file_url = 'http://' + domain + '/' + key;
+        var file_name = $file.name.replace(/\s/g, "%20");
+        var file_size = Math.round($file.size * 10 / 1024) / 10;
         
         // Populate the Post paramters.
         fd.append('AWSAccessKeyId', AWSAccessKeyId);
@@ -108,16 +117,16 @@
         xhr.addEventListener("load", function(e) {
             // success
             //console.log('done', e);
-            linkStorage.add(file_url);
-            $('#filename').prepend(makeLink(file_url));
+            linkStorage.add(file_url, file_name, file_size, exp);
+            $('#filename').prepend(makeLink(file_url, file_name, file_size, exp));
             $($dropbox).html("Or drop here.");
             $progress.hide().find(".bar").css({width: 0});
         }, false);
         xhr.addEventListener("error", function(e) {
             // sometimes S3 throws errors (303) but still works, so we create the link anyway
             //console.log('failed', e);
-            linkStorage.add(file_url);
-            $('#filename').prepend(makeLink(file_url));
+            linkStorage.add(file_url, file_name, file_size, exp);
+            $('#filename').prepend(makeLink(file_url, file_name, file_size, exp));
             $($dropbox).html("Or drop here.");
             $progress.hide().find(".bar").css({width: 0});
         }, false);
