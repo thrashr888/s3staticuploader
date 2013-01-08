@@ -163,12 +163,13 @@
         var dt = e.dataTransfer;
         files = dt.files;
         
-        //console.log('dropped', files);
         
-        var file_size = Math.round(files[0].size * 10 / 1024) / 10;
-        $($dropbox).html("Dropped " + files[0].name + ' ' + file_size + ' KB');
-        
-        $form.submit();
+        if (typeof files[0] != 'undefined') {
+            var file_size = Math.round(files[0].size * 10 / 1024) / 10;
+            $($dropbox).html("Dropped " + files[0].name + ' ' + file_size + ' KB');
+            
+            $form.submit();
+        }
     }, false);
 
 })(jQuery, window, window.s3u);

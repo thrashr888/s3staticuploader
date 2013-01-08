@@ -42,7 +42,6 @@
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
                     </a>
                     <a class="brand" href="/">S3 Static Uploader</a>
                     <div class="nav-collapse collapse">
@@ -96,7 +95,16 @@
                     </form>
                 </div>
             </div>
-                
+
+            <div class="row">
+                <div class="span1 offset3">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
+                </div>
+                <div class="span4">
+                    <div class="fb-like" data-send="true" data-width="450" data-show-faces="true"></div>
+                </div>
+            </div>
+
             <div class="row">
                <div class="span12">
                    <h2>File history</h2>
@@ -120,5 +128,32 @@
 
         <script src="js/settings.js"></script>
         <script src="js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-55560-23']);
+          _gaq.push(['_setDomainName', window.s3u.bucket + '.s3-website-us-east-1.amazonaws.com']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = document.location.protocol + "//connect.facebook.net/en_US/all.js#xfbml=1&appId=169137773153355";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
     </body>
 </html>

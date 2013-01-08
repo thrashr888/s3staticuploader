@@ -2,7 +2,7 @@
 
 # Deploy tool for s3staticuploader
 #
-# - Creates new bucket with website, CORS and ACl settings
+# - Creates new bucket with Website, CORS, Lifecycle and ACl settings
 # - Only copies required files
 #
 # Copyright 2012 Paul Thrasher
@@ -27,20 +27,22 @@ if sys.argv.__len__() < 4:
 bucket_name = sys.argv[1]
 aws_access_key = sys.argv[2]
 aws_secret_key = sys.argv[3]
-region = 's3-website-us-east-1.amazonaws.com'
+region = 's3-website-us-east-1.amazonaws.com'  # hard-coded for now
 
-# create a new bucket if not exists
+# set up initial connection details to S3
 conn = S3Connection(aws_access_key, aws_secret_key)
 
 # only set up if bucket doesn't already exist
 try:
     bucket = conn.get_bucket(bucket_name, True)
     print "Using bucket `%s`" % (bucket_name)
+
 except S3ResponseError:
     bucket = False
     print "Bucket doesn't exist `%s`" % (bucket_name)
 
 if not bucket:
+
     print "Creating new bucket `%s`..." % (bucket_name)
 
     bucket = conn.create_bucket(bucket_name)
@@ -50,6 +52,7 @@ if not bucket:
 
     cors_cfg = CORSConfiguration()
     cors_cfg.add_rule(['PUT', 'POST', 'DELETE'], 'http://' + bucket_name + '.' + region, allowed_header='*', max_age_seconds=3000, expose_header='x-amz-server-side-encryption')
+    cors_cfg.add_rule(['PUT', 'POST', 'DELETE'], 'http://localhost', allowed_header='*', max_age_seconds=3000, expose_header='x-amz-server-side-encryption')
     cors_cfg.add_rule('GET', '*')
     bucket.set_cors(cors_cfg)
 
@@ -63,6 +66,8 @@ if not bucket:
     lifecycle_cfg.add_rule('d5', 'u/d5/', 'Enabled', 5)
     lifecycle_cfg.add_rule('d6', 'u/d6/', 'Enabled', 6)
     lifecycle_cfg.add_rule('d7', 'u/d7/', 'Enabled', 7)
+    lifecycle_cfg.add_rule('d14', 'u/d14/', 'Enabled', 14)
+    lifecycle_cfg.add_rule('d30', 'u/d30/', 'Enabled', 30)
     bucket.configure_lifecycle(lifecycle_cfg)
 
 print "Uploading site files..."
