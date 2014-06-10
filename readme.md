@@ -1,6 +1,6 @@
 # ![s3staticuploader logo](http://thrashr888-tests3upper.s3.amazonaws.com/u/d7/1349862973/s3staticuploader-logo.gif "s3staticuploader logo")
 
-A HTML5, S3-hosted app for uploading files to S3 using [CORS](http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html).
+A HTML5, S3-hosted app for uploading files to S3 using [CORS](http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html). A file sharing app for Amazon S3.
 
 ## Warning
 
@@ -23,7 +23,7 @@ This app allows anyone with access to the url to upload files to your S3 bucket.
 
 2) Use the deploy script to create and set up your new site and upload it to S3. *NOTE: This script will only copy the files included in this repo needed for the site, and overwrite existing files with the same name.*
 
-\* Requires Python installed with [pip](http://www.pip-installer.org/en/latest/installing.html).
+\* Requires Python installed, with [pip](http://www.pip-installer.org/en/latest/installing.html).
 
     $ [ -x `which pip` ] || curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python # install pip if unavailable
     $ pip install boto # installs the `boto` package for accessing Amazon Web Services
